@@ -67,7 +67,7 @@ echo -e "--------------------------------------------\n"
 echo "ful backup"
  
  
-        if PGPASSWORD="I@madm1n" pg_dump -Fc -v --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin --dbname=wpodb -f  | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
+        if PGPASSWORD="I@madm1n" pg_dump -Fc -v --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin --dbname=wpodb  | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
                 echo "[!!ERROR!!] Failed to produce globals backup" 1>&2
         else
                 mv $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz
