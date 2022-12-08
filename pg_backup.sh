@@ -72,89 +72,12 @@ echo "Making backup directory in $FINAL_BACKUP_DIR"
 if ! mkdir -p $FINAL_BACKUP_DIR; then
 	echo "Cannot create backup directory in $FINAL_BACKUP_DIR. Go and fix it!" 1>&2
 	exit 1;
-fi;
+fi; 
  
-#######################
-### GLOBALS BACKUPS ###
-#######################
  
-## PING HEALTHCHECKS BEFORE STARTING BACKUP
-##curl -fsS --retry 3 https://hc-ping.com/15a8af78-b3f1-4b2e-8b4f-17a86979f3f5 > /dev/null 
+PGPASSWORD="I@madm1n" pg_dump -Fc -v --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin --dbname=wpodb | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress
 
-echo -e "\n\nPerforming globals backup"
-echo -e "--------------------------------------------\n"
- 
-if [ $ENABLE_GLOBALS_BACKUPS = "yes" ]
-then
-        echo "Globals backup"
- 
-        if ! pg_dumpall -g -h "$HOSTNAME" -U "$USERNAME" -p $PORT | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
-                echo "[!!ERROR!!] Failed to produce globals backup" 1>&2
-        else
-                mv $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz
-        fi
-else
-	echo "None"
-fi
- 
- 
-###########################
-### SCHEMA-ONLY BACKUPS ###
-###########################
- 
-for SCHEMA_ONLY_DB in ${SCHEMA_ONLY_LIST//,/ }
-do
-	SCHEMA_ONLY_CLAUSE="$SCHEMA_ONLY_CLAUSE or datname ~ '$SCHEMA_ONLY_DB'"
-done
- 
-SCHEMA_ONLY_QUERY="select datname from pg_database where false $SCHEMA_ONLY_CLAUSE order by datname;"
- 
-echo -e "\n\nPerforming schema-only backups"
-echo -e "--------------------------------------------\n"
- 
-SCHEMA_ONLY_DB_LIST=`psql -h "$HOSTNAME" -U "$USERNAME" -p $PORT -At -c "$SCHEMA_ONLY_QUERY" postgres`
- 
-echo -e "The following databases were matched for schema-only backup:\n${SCHEMA_ONLY_DB_LIST}\n"
- 
-for DATABASE in $SCHEMA_ONLY_DB_LIST
-do
-	echo "Schema-only backup of $DATABASE"
- 
-	if ! pg_dump -Fp -s -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME"_SCHEMA".sql.gz.in_progress; then
-		echo "[!!ERROR!!] Failed to backup database schema of $DATABASE" 1>&2
-	else
-		mv $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME"_SCHEMA".sql.gz.in_progress $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME"_SCHEMA".sql.gz
-	fi
-done
- 
- 
-###########################
-###### FULL BACKUPS #######
-###########################
- 
-
-for SCHEMA_ONLY_DB in ${SCHEMA_ONLY_LIST//,/ }
-do
-	EXCLUDE_SCHEMA_ONLY_CLAUSE="$EXCLUDE_SCHEMA_ONLY_CLAUSE and datname !~ '$SCHEMA_ONLY_DB'"
-done
- 
-FULL_BACKUP_QUERY="select datname from pg_database where not datistemplate and datallowconn $EXCLUDE_SCHEMA_ONLY_CLAUSE order by datname;"
- 
-echo -e "\n\nPerforming full backups"
-echo -e "--------------------------------------------\n"
- 
-for DATABASE in `psql -h "$HOSTNAME" -U "$USERNAME" -p $PORT -At -c "$FULL_BACKUP_QUERY" postgres`
-do
-	if [ $ENABLE_PLAIN_BACKUPS = "yes" ]
-	then
-		echo "Plain backup of $DATABASE"
- 
-		if ! pg_dump -Fp -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
-			echo "[!!ERROR!!] Failed to produce plain backup database $DATABASE" 1>&2
-		else
-			mv $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz
-		fi
-	fi
+mv $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz
  
 	if [ $ENABLE_CUSTOM_BACKUPS = "yes" ]
 	then
@@ -176,8 +99,10 @@ do
 			echo "Cannot create backup directory in $FINAL_BACKUP_DIR'$DATABASE'. Go and fix it!" 1>&2
 			exit 1;
 		fi;
+		
+		
  
-		if ! pg_dump -Fc -Z 0 -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT -f $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress; then
+		if ! PGPASSWORD="I@madm1n" pg_dump -Fc -Z 0 -h --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin --dbname=wpodb $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress; then
 			echo "[!!ERROR!!] Failed to produce custom backup database $DATABASE" 1>&2
 		else
 			mv $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump
@@ -188,7 +113,7 @@ do
 		cp -R $FINAL_BACKUP_DIR"$DATABASE/current/." $FINAL_BACKUP_DIR"$DATABASE/old"
 
 		## PING HEALTHCHECKS BEFORE UPLOADING BACKUP FILES
-		curl -fsS --retry 3 https://hc-ping.com/847a8225-81fd-4100-a0dd-702d2201aa48 > /dev/null
+		##curl -fsS --retry 3 https://hc-ping.com/847a8225-81fd-4100-a0dd-702d2201aa48 > /dev/null
 
 		echo -e " "
 		echo -e "Sync current backup to azure blob"
