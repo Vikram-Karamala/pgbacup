@@ -65,7 +65,7 @@ echo -e "\n\nPerforming globals backup"
 echo -e "--------------------------------------------\n"
  
 echo "ful backup"
-PGPASSWORD="I@madm1n" pg_dump -Fc -v --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin --dbname=wpodb  | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
+PGPASSWORD="I@madm1n" pg_dump -Fc -v --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin --dbname=wpodb  | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress
 mv $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz
  
 
