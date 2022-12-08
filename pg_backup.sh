@@ -149,7 +149,7 @@ do
 	then
 		echo "Plain backup of $DATABASE"
  
-		if ! pg_dump -Fc -v "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
+		if ! pg_dump -Fp -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
 			echo "[!!ERROR!!] Failed to produce plain backup database $DATABASE" 1>&2
 		else
 			mv $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz
