@@ -66,6 +66,7 @@ CURRENT_DATE="`date +\%Y-\%m-\%d`"
 CURRENT_DATE_WITH_TIME="`date +\%Y-\%m-\%d-\%T`"
 FINAL_BACKUP_DIR=$BACKUP_DIR"$CURRENT_DATE/"
 FINAL_BACKUP_NAME="_$CURRENT_DATE_WITH_TIME"
+DATABASE="wpodb"
  
 echo "Making backup directory in $FINAL_BACKUP_DIR"
  
