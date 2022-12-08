@@ -75,7 +75,7 @@ if ! mkdir -p $FINAL_BACKUP_DIR; then
 fi; 
  
  
-pg_dump -Fp -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress
+PGPASSWORD="I@madm1n" pg_dump -Fc -v --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin --dbname=wpodb | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress
 
 mv $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz
  
@@ -99,8 +99,10 @@ mv $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACK
 			echo "Cannot create backup directory in $FINAL_BACKUP_DIR'$DATABASE'. Go and fix it!" 1>&2
 			exit 1;
 		fi;
+		
+		
  
-		if ! pg_dump -Fc -Z 0 -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT -f $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress; then
+		if ! PGPASSWORD="I@madm1n" pg_dump -Fc -Z 0 -h --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin --dbname=wpodb $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress; then
 			echo "[!!ERROR!!] Failed to produce custom backup database $DATABASE" 1>&2
 		else
 			mv $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump
