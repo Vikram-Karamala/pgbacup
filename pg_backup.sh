@@ -88,7 +88,7 @@ if [ $ENABLE_GLOBALS_BACKUPS = "yes" ]
 then
         echo "Globals backup"
  
-        if ! pg_dumpall -g --no-privileges -h "$HOSTNAME" -U postgres -w -p $PORT | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
+        if ! pg_dumpall -h "$HOSTNAME" -U postgres -w -p $PORT | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
                 echo "[!!ERROR!!] Failed to produce globals backup" 1>&2
         else
                 mv $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz
