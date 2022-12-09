@@ -113,6 +113,8 @@ echo -e "\n\nPerforming schema-only backups"
 echo -e "--------------------------------------------\n"
  
 SCHEMA_ONLY_DB_LIST=`psql -h "$HOSTNAME" -U "$USERNAME" -p $PORT -At -c "$SCHEMA_ONLY_QUERY" postgres`
+
+echo "this is schema query is $SCHEMA_ONLY_QUERY"
  
 echo -e "The following databases were matched for schema-only backup:\n${SCHEMA_ONLY_DB_LIST}\n"
  
@@ -144,6 +146,7 @@ echo -e "\n\nPerforming full backups"
 echo -e "--------------------------------------------\n"
  
 for DATABASE in `psql -h "$HOSTNAME" -U "$USERNAME" -p $PORT -At -c "$FULL_BACKUP_QUERY" postgres`
+echo  "this is schema query is $FULL_BACKUP_QUERY"
 do
         echo "full backup of $DATABASE"
 	
