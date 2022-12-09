@@ -112,7 +112,7 @@ SCHEMA_ONLY_QUERY="select datname from pg_database where false $SCHEMA_ONLY_CLAU
 echo -e "\n\nPerforming schema-only backups"
 echo -e "--------------------------------------------\n"
  
-SCHEMA_ONLY_DB_LIST=`psql -h "$HOSTNAME" -U "$USERNAME" -At -c "$SCHEMA_ONLY_QUERY" `
+SCHEMA_ONLY_DB_LIST=`psql -h "$HOSTNAME" -U "$USERNAME" -p $PORT -At -c "$SCHEMA_ONLY_QUERY" postgres`
  
 echo -e "The following databases were matched for schema-only backup:\n${SCHEMA_ONLY_DB_LIST}\n"
  
