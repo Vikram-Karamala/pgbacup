@@ -88,7 +88,7 @@ if [ $ENABLE_GLOBALS_BACKUPS = "yes" ]
 then
         echo "Globals backup"
  
-        if ! PGPASSWORD="I@madm1n" pg_dumpall  --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin  | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
+        if ! PGPASSWORD="I@madm1n" pg_dumpall --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin  | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
                 echo "[!!ERROR!!] Failed to produce globals backup" 1>&2
         else
                 mv $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz
@@ -112,7 +112,7 @@ SCHEMA_ONLY_QUERY="select datname from pg_database where false $SCHEMA_ONLY_CLAU
 echo -e "\n\nPerforming schema-only backups"
 echo -e "--------------------------------------------\n"
  
-SCHEMA_ONLY_DB_LIST=`psql -h "$HOSTNAME" -U "$USERNAME" -p $PORT -At -c "$SCHEMA_ONLY_QUERY" postgres`
+SCHEMA_ONLY_DB_LIST=`psql -h "$HOSTNAME" -U "$USERNAME" -At -c "$SCHEMA_ONLY_QUERY" `
  
 echo -e "The following databases were matched for schema-only backup:\n${SCHEMA_ONLY_DB_LIST}\n"
  
@@ -120,7 +120,7 @@ for DATABASE in $SCHEMA_ONLY_DB_LIST
 do
 	echo "Schema-only backup of $DATABASE"
  
-	if ! pg_dump -Fp -s -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME"_SCHEMA".sql.gz.in_progress; then
+	if ! PGPASSWORD="I@madm1n" pg_dump -Fc -v -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME"_SCHEMA".sql.gz.in_progress; then
 		echo "[!!ERROR!!] Failed to backup database schema of $DATABASE" 1>&2
 	else
 		mv $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME"_SCHEMA".sql.gz.in_progress $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME"_SCHEMA".sql.gz
