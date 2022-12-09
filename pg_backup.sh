@@ -88,7 +88,7 @@ if [ $ENABLE_GLOBALS_BACKUPS = "yes" ]
 then
         echo "Globals backup"
  
-        if ! PGPASSWORD="I@madm1n" pg_dumpall -g --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin  | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
+        if ! PGPASSWORD="I@madm1n" pg_dumpall  --host=iom-psql-server-evd.postgres.database.azure.com --username=psqladmin  | gzip > $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
                 echo "[!!ERROR!!] Failed to produce globals backup" 1>&2
         else
                 mv $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz.in_progress $FINAL_BACKUP_DIR"globals"$FINAL_BACKUP_NAME.sql.gz
