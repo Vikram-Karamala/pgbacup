@@ -199,14 +199,14 @@ do
 
 		echo -e " "
 		echo -e "Sync old backup to azure blob"
-		/root/pg_backup/azcopy sync "$FINAL_BACKUP_DIR$DATABASE/old" "BLOB_URL/$CURRENT_DATE/$DATABASE/old/$BLOB_SAS""
+		/root/pg_backup/azcopy sync "$FINAL_BACKUP_DIR$DATABASE/old" "$BLOB_URL/$CURRENT_DATE/$DATABASE/old/$BLOB_SAS""
 
 		## Sync backup log & delete backup log to azure
 		echo -e " "
 		echo -e "Synchronizing log files to azure blob..."
 		cp /var/log/cron_backup.log /var/log/pgbackup
 		cp /var/log/cron_delete.log /var/log/pgbackup
-		/root/pg_backup/azcopy sync "/var/log/pgbackup" "$BLOB_URL?$BLOB_SAS"
+		/root/pg_backup/azcopy sync "/var/log/pgbackup" "$BLOB_URL/$CURRENT_DATE/$BLOB_SAS"
 		rm /var/log/pgbackup/*.log
 
 	fi
