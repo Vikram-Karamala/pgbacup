@@ -145,10 +145,11 @@ echo -e "--------------------------------------------\n"
  
 for DATABASE in `psql -h "$HOSTNAME" -U "$USERNAME" -p $PORT -At -c "$FULL_BACKUP_QUERY" postgres`
 do
+        echo "full backup of $DATABASE"
+	
 	if [ $ENABLE_PLAIN_BACKUPS = "yes" ]
 	then
 		echo "Plain backup of $DATABASE"
- 
 		if ! PGPASSWORD="I@madm1n" pg_dump -Fc -v -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" | gzip > $FINAL_BACKUP_DIR"$DATABASE"$FINAL_BACKUP_NAME.sql.gz.in_progress; then
 			echo "[!!ERROR!!] Failed to produce plain backup database $DATABASE" 1>&2
 		else
