@@ -135,7 +135,7 @@ done
 
 for SCHEMA_ONLY_DB in ${SCHEMA_ONLY_LIST//,/ }
 do
-	EXCLUDE_SCHEMA_ONLY_CLAUSE="$EXCLUDE_SCHEMA_ONLY_CLAUSE and datname !~ '$SCHEMA_ONLY_DB'"
+	EXCLUDE_SCHEMA_ONLY_CLAUSE="$EXCLUDE_SCHEMA_ONLY_CLAUSE and datname ~ '$SCHEMA_ONLY_DB'"
 done
  
 FULL_BACKUP_QUERY="select datname from pg_database where not datistemplate and datallowconn $EXCLUDE_SCHEMA_ONLY_CLAUSE order by datname;"
