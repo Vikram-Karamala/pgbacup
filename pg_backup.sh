@@ -66,7 +66,7 @@ CURRENT_DATE="`date +\%Y-\%m-\%d`"
 CURRENT_DATE_WITH_TIME="`date +\%Y-\%m-\%d-\%T`"
 FINAL_BACKUP_DIR=$BACKUP_DIR"$CURRENT_DATE/"
 FINAL_BACKUP_NAME="_$CURRENT_DATE_WITH_TIME"
-DATABASE="wpdb"
+DATABASE="wpodb"
  
 echo "Making backup directory in $FINAL_BACKUP_DIR"
  
@@ -98,7 +98,7 @@ fi;
 			exit 1;
 		fi;
  
-		if ! pg_dump -Fc -Z 0 -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT -f $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress; then
+		if ! pg_dump -Fc -v -h "$HOSTNAME" -U "$USERNAME" "$DATABASE" -p $PORT -f $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress; then
 			echo "[!!ERROR!!] Failed to produce custom backup database $DATABASE" 1>&2
 		else
 			mv $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump
