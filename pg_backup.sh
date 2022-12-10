@@ -107,7 +107,7 @@ fi;
 		
 		echo -e " "
 		echo -e "Sync current backup to azure blob"
-		/root/pg_backup/azcopy login --service-principal --application-id f2bd6605-6ff7-427c-8f98-16de814854fc
+		/root/pg_backup/azcopy login --service-principal --application-id "f2bd6605-6ff7-427c-8f98-16de814854fc"
 		/root/pg_backup/azcopy copy "$FINAL_BACKUP_DIR$DATABASE/current" "$BLOB_URL/$CURRENT_DATE/$DATABASE/$BLOB_SAS"
  
 		## Sync backup log & delete backup log to azure
