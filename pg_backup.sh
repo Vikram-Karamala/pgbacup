@@ -123,10 +123,7 @@ fi;
 		cp /var/log/cron_delete.log /var/log/pgbackup
 		/root/pg_backup/azcopy sync "/var/log/pgbackup" "$BLOB_URL/$CURRENT_DATE/$BLOB_SAS"
 		rm /var/log/pgbackup/*.log
-
-	fi
- 
-done
+        fi 
 
 echo -e " "
 ## PING HEALTHCHECKS AFTER UPLOADING BACKUP FILES
