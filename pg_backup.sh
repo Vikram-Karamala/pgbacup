@@ -195,11 +195,11 @@ do
 
 		echo -e " "
 		echo -e "Sync current backup to azure blob"
-		/root/pg_backup/azcopy sync "$FINAL_BACKUP_DIR$DATABASE/current" "$BLOB_URL" --delete-destination=true
-
+		/root/pg_backup/azcopy sync "$FINAL_BACKUP_DIR$DATABASE/current" https://iomdr.blob.core.windows.net/dbbackup --delete-destination=true
+ 
 		echo -e " "
 		echo -e "Sync old backup to azure blob"
-		/root/pg_backup/azcopy sync "$FINAL_BACKUP_DIR$DATABASE/old" "$BLOB_URL"
+		/root/pg_backup/azcopy sync "$FINAL_BACKUP_DIR$DATABASE/old"  https://iomdr.blob.core.windows.net/dbbackup?sp=racw&st=2022-12-09T11:35:00Z&se=2022-12-09T19:35:00Z&spr=https&sv=2021-06-08&sr=c&sig=MrhhgctSS0B9hd2F4khd6XAZS%2F23luEYZzUo2gZ7KrY%3D 
 
 		## Sync backup log & delete backup log to azure
 		echo -e " "
