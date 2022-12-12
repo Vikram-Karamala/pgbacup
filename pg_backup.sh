@@ -102,6 +102,7 @@ fi;
 			echo "[!!ERROR!!] Failed to produce custom backup database $DATABASE" 1>&2
 		else
 			mv $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump.in_progress $FINAL_BACKUP_DIR"$DATABASE/current/$DATABASE"$FINAL_BACKUP_NAME.dump
+			echo "copy is done"
 		fi
 		
 		
